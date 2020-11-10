@@ -7,6 +7,12 @@
         "laravel"
     ],
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "module-packages/*"
+        }
+    ],
     "require": {
         "php": "^7.3|^8.0",
         "fideloper/proxy": "^4.4",
@@ -14,7 +20,19 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
-        "tymon/jwt-auth": "^1.0"
+        "nwidart/laravel-modules": "^8.1",
+        "tymon/jwt-auth": "^1.0",
+        "illuminate/bus": "^8.0",
+        "illuminate/config": "^8.0",
+        "illuminate/contracts": "^8.0",
+        "illuminate/database": "^8.0",
+        "illuminate/encryption": "^8.0",
+        "illuminate/hashing": "^8.0",
+        "illuminate/http": "^8.0",
+        "illuminate/notifications": "^8.0",
+        "illuminate/routing": "^8.0",
+        "illuminate/support": "^8.0",
+        "illuminate/validation": "^8.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -31,11 +49,13 @@
     "extra": {
         "laravel": {
             "dont-discover": []
-        }
+        },
+        "module-dir": "modules"
     },
     "autoload": {
         "psr-4": {
             "App\\": "app/",
+            "Modules\\": "Modules/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }
@@ -57,6 +77,11 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "post-update-cmd": [
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:meta"
         ]
     }
 }

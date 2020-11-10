@@ -1,0 +1,13 @@
+{
+    "name": "ApplicationAuth",
+    "alias": "application-auth",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "Modules\\ApplicationAuth\\Providers\\ApplicationAuthServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
