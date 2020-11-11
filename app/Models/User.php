@@ -8,8 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\DeviceLog;
 use App\Models\DeviceRequest;
-
-
+use App\Traits\GetAuthUserTrait;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
  * App\User
@@ -37,7 +37,7 @@ use App\Models\DeviceRequest;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, GetAuthUserTrait, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -48,6 +48,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'reset_password_token'
     ];
 
     /**
