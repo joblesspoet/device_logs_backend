@@ -9,6 +9,18 @@ class Device extends Model
 {
     use HasFactory;
 
+      /**
+     * The attributes that are const.
+     *
+     * @var const
+     */
+    const INUSE = "INUSE";
+    const AVAILABLE = "AVAILABLE";
+    const STATUS = [
+        self::AVAILABLE,
+        self::INUSE,
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -30,4 +42,6 @@ class Device extends Model
     protected $casts = [
 
     ];
+
+    
 }

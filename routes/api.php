@@ -27,6 +27,6 @@ Route::prefix('auth')
 Route::namespace('API')
     ->middleware('auth:sanctum')
     ->group(function () {
-
+        Route::get('devices', 'DevicesController@index');
         Route::post('logout', 'Auth\AuthController@logout');
     });
