@@ -109,9 +109,7 @@ class DeviceCrudController extends CrudController
             [   // select_from_array
                 'name' => 'status',
                 'label' => "Status",
-                'type' => 'select_from_array',
-                'options' => array_combine(Device::STATUS, Device::STATUS),
-                'allows_null' => false,
+                'type' => 'enum',
             ]
         ]);
 

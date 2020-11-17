@@ -54,6 +54,14 @@ class Device extends Model
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Get the requested devices
+     */
+    public function request_devices()
+    {
+        return $this->hasMany(DeviceRequest::class);
+    }
+    
     /*
     |--------------------------------------------------------------------------
     | MUTATORS
@@ -90,7 +98,6 @@ class Device extends Model
 
             $disk->put("Devices/{$filename}.jpg", $image->stream('jpg'));
             $this->attributes['device_picture'] = "Devices/{$filename}.jpg";
-   
         } else if (is_string($value) && $disk->exists("Devices/{$value}")) {
             $this->attributes['device_picture'] = $value;
         }

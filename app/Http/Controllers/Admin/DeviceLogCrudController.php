@@ -23,7 +23,7 @@ class DeviceLogCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\DeviceLog::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/devicelog');
-        CRUD::setEntityNameStrings('Devices Log', 'device_logs');
+        CRUD::setEntityNameStrings('Device Log', 'Devices Logs');
     }
 
     /**

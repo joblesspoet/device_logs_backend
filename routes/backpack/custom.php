@@ -16,4 +16,5 @@ Route::group([
 ], function () { // custom admin routes
     Route::crud('device', 'DeviceCrudController');
     Route::crud('devicelog', 'DeviceLogCrudController');
+    Route::crud('devicerequest', 'DeviceRequestCrudController');
 }); // this should be the absolute last line of this file

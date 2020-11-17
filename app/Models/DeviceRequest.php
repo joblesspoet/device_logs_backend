@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class DeviceRequest extends Model
 {
+    use \Backpack\CRUD\app\Models\Traits\CrudTrait;
     use HasFactory;
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -26,5 +27,19 @@ class DeviceRequest extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+
+    /**
+     * Get the device that has request
+     */
+    public function device()
+    {
+        return $this->belongsTo(Device::class);
+    }
+
+    public function getStatusAttribute()
+    {
+        return $this->device->status;
     }
 }
