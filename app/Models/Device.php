@@ -2,14 +2,19 @@
 
 namespace App\Models;
 
+use Str;
+use App\Models\User;
+use Intervention\Image\Facades\Image;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Device extends Model
 {
+    use \Backpack\CRUD\app\Models\Traits\CrudTrait;
     use HasFactory;
 
-      /**
+    /**
      * The attributes that are const.
      *
      * @var const
@@ -39,9 +44,55 @@ class Device extends Model
      *
      * @var array
      */
-    protected $casts = [
+    protected $casts = [];
 
-    ];
+    /**
+     * Get the device owned by user
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
-    
+    /*
+    |--------------------------------------------------------------------------
+    | MUTATORS
+    |--------------------------------------------------------------------------
+    */
+    /**
+     * setLogoAttribute function
+     *
+     * @param [type] $value
+     * @return void
+     */
+    public function setDevicePictureAttribute($value)
+    {
+        $disk = Storage::disk("public");
+
+        if (
+            $value instanceof \SplFileInfo ||
+            (is_string($value) && preg_match('#^(https?://|data:image/)#', $value))
+        ) {
+
+            if (
+                (is_string($value) &&
+                    preg_match('#http?://#', $value))
+            ) {
+
+                return;
+            }
+
+            $image = Image::make($value);
+
+            do {
+                $filename = Str::random(40);
+            } while (Storage::exists("Devices/{$filename}.jpg"));
+
+            $disk->put("Devices/{$filename}.jpg", $image->stream('jpg'));
+            $this->attributes['device_picture'] = "Devices/{$filename}.jpg";
+   
+        } else if (is_string($value) && $disk->exists("Devices/{$value}")) {
+            $this->attributes['device_picture'] = $value;
+        }
+    }
 }
