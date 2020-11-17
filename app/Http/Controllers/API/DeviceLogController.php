@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DeviceLogsResource;
 
-class DeviceLogsController extends Controller
+class DeviceLogController extends Controller
 {
     /**
      * Display a listing of the resource.

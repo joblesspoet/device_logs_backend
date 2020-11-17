@@ -9,7 +9,7 @@ use App\Traits\GetAuthUserTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
-class DeviceRequestsController extends Controller
+class DeviceRequestController extends Controller
 {
     use GetAuthUserTrait;
     /**

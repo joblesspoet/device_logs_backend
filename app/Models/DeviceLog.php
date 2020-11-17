@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class DeviceLog extends Model
 {
-    use \Backpack\CRUD\app\Models\Traits\CrudTrait;
     use HasFactory;
+    use \Backpack\CRUD\app\Models\Traits\CrudTrait;
 
     /**
      * The attributes that are mass assignable.

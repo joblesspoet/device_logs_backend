@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DevicesResource;
 
-class DevicesController extends Controller
+class DeviceController extends Controller
 {
     /**
      * Display a listing of the resource.

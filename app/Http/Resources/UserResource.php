@@ -1,9 +1,6 @@
 <?php
 
 namespace App\Http\Resources;
-use App\Models\Language;
-use App\Http\Resources\ProfileResource;
-use App\Http\Resources\LanguageResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource

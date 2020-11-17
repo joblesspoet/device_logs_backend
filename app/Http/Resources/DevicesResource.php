@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DevicesResource extends JsonResource
@@ -16,11 +17,11 @@ class DevicesResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'status' => $this->status,
             'device_name' => $this->device_name,
             'device_model' => $this->device_model,
             'device_version' => $this->device_version,
-            'device_picture' => $this->device_picture,
-            'status' => $this->status
+            'device_picture' => url(Storage::url($this->device_picture)),
         ];
     }
 }
