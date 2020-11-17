@@ -4,9 +4,14 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\API\Devices\DeviceRequest;
+use App\Traits\GetAuthUserTrait;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class DeviceRequestsController extends Controller
 {
+    use GetAuthUserTrait;
     /**
      * Display a listing of the resource.
      *
@@ -24,7 +29,6 @@ class DeviceRequestsController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -33,9 +37,16 @@ class DeviceRequestsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DeviceRequest $request)
     {
-        //
+        $user =  $this->getAuthUser();
+        $inputs = $request->only(['device_id', 'request_detail']);
+        $inputs['user_id'] = $user->id;
+
+        DB::transaction(function ($user, $inputs) {
+            DeviceRequest::create($inputs);
+            return JsonResponse::HTTP_OK;
+        });
     }
 
     /**
