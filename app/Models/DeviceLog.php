@@ -29,4 +29,18 @@ class DeviceLog extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Get the device owned by user
+     */
+    public function device_requests()
+    {
+        return $this->belongsTo(DeviceRequest::class);
+    }
+
+
+    public function device()
+    {
+        return $this->belongsTo(Device::class);
+    }
 }

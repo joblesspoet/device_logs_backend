@@ -62,6 +62,14 @@ class Device extends Model
         return $this->hasMany(DeviceRequest::class);
     }
     
+    /**
+     * Get the device logs
+     */
+    public function device_logs()
+    {
+        return $this->hasMany(DeviceLog::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | MUTATORS

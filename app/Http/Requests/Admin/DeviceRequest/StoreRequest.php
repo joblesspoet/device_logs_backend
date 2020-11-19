@@ -26,6 +26,7 @@ class StoreRequest extends FormRequest
         return [
             'user_id' => 'required',
             'device_id' => 'required',
+            'log_detail' => 'required',
             'request_detail' => 'required',
         ];
     }

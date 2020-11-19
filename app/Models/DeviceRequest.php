@@ -38,6 +38,14 @@ class DeviceRequest extends Model
         return $this->belongsTo(Device::class);
     }
 
+     /**
+     * Get the devices logs
+     */
+    public function device_logs()
+    {
+        return $this->hasMany(DeviceLog::class);
+    }
+
     public function getStatusAttribute()
     {
         return $this->device->status;

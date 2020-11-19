@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\Traits\CRUDUtility;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use App\Http\Requests\Admin\DeviceRequest\StoreRequest;
 use App\Http\Requests\Admin\DeviceRequest\UpdateRequest;
+use App\Models\DeviceLog;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
@@ -41,6 +42,41 @@ class DeviceRequestCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/devicerequest');
         CRUD::setEntityNameStrings('Device Request', 'Device Requests');
 
+        $this->crud->addColumns([
+            [
+                'name' => 'id',
+                'label' => __('#'),
+                'type' => 'text',
+            ],
+            [
+                'name' => 'user_id',
+                'label' => "Name",
+                'type' => 'closure',
+                'function' => function ($model) {
+                    return $model->user->name;
+                }
+
+            ],
+            [
+                'name' => 'device_id',
+                'label' => "Device name",
+                'type' => 'closure',
+                'function' => function ($model) {
+                    return $model->device->device_name;
+                }
+
+            ],
+            [
+                'name' => 'request_detail',
+                'label' => 'Request Detail',
+                'type' => 'text',
+            ],
+            [
+                'name' => 'created_at',
+                'label' => 'Created At',
+                'type' => 'text',
+            ],
+        ]);
         $this->crud->addFields([
             [
                 'label'     => "User Name",
@@ -64,11 +100,11 @@ class DeviceRequestCrudController extends CrudController
                 'type' => 'text',
                 'attribute' => 'readonly'
             ],
-            // [
-            //     'name' => 'log_detail',
-            //     'label' => 'Log Detail',
-            //     'type' => 'text',
-            // ],
+            [
+                'name' => 'log_detail',
+                'label' => 'Log Detail',
+                'type' => 'text',
+            ],
             [
                 'name' => 'status',
                 'label' => "Status",
@@ -90,11 +126,11 @@ class DeviceRequestCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('user_id');
-        CRUD::column('device_id');
-        CRUD::column('request_detail');
-        CRUD::column('created_at');
-        CRUD::column('updated_at');
+        // CRUD::column('user_id');
+        // CRUD::column('device_id');
+        // CRUD::column('request_detail');
+        // CRUD::column('created_at');
+        // CRUD::column('updated_at');
     }
 
     /**
@@ -110,11 +146,18 @@ class DeviceRequestCrudController extends CrudController
             'device_id',
             'request_detail',
         ]);
+        $log_detail = $request->only([
+            'log_detail',
+            'device_id',
+            'user_id'
+        ]);
+
         $status =  $request->only('status');
 
-        return DB::transaction(function () use ($inputs, $status) {
+        return DB::transaction(function () use ($inputs, $status, $log_detail) {
             $request = DeviceRequest::create($inputs);
             $request->device->update($status);
+            DeviceLog::create($log_detail);
             return $this->redirectLocation($request);
         });
     }
@@ -135,11 +178,17 @@ class DeviceRequestCrudController extends CrudController
             'device_id',
             'request_detail',
         ]);
+        $log_detail = $request->only([
+            'log_detail',
+            'device_id',
+            'user_id'
+        ]);
         $status =  $request->only('status');
 
-        return DB::transaction(function () use ($deviceRequest, $inputs, $status) {
+        return DB::transaction(function () use ($deviceRequest, $inputs, $status, $log_detail) {
             $deviceRequest->update($inputs);
             $deviceRequest->device->update($status);
+            DeviceLog::create($log_detail);
             return $this->redirectLocation($deviceRequest);
         });
     }
