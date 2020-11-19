@@ -30,5 +30,5 @@ Route::namespace('API')
         Route::get('devices', 'DeviceController@index');
         Route::get('devices-logs', 'DeviceLogController@index');
         Route::post('devices-request', 'DeviceRequestController@store');
-        Route::post('logout', 'Auth\AuthController@logout');
+        Route::get('logout', 'Auth\AuthController@logout');
     });
