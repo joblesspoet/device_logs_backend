@@ -17,4 +17,5 @@ Route::group([
     Route::crud('device', 'DeviceCrudController');
     Route::crud('devicelog', 'DeviceLogCrudController');
     Route::crud('devicerequest', 'DeviceRequestCrudController');
+    Route::crud('user', 'UserCrudController');
 }); // this should be the absolute last line of this file
