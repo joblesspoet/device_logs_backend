@@ -10,6 +10,8 @@ use Illuminate\Notifications\Notifiable;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
+
 /**
  * App\User
  *
@@ -27,7 +29,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DeviceLog[] $assigned_devices
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DeviceRequest[] $device_requests 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DeviceRequest[] $device_requests
  * @method static Builder|User newModelQuery()
  * @method static Builder|User newQuery()
  * @method static Builder|User query()
@@ -85,5 +87,14 @@ class User extends Authenticatable
     public function device_requests()
     {
         return $this->hasMany(DeviceRequest::class);
+    }
+
+    public function setPasswordAttribute($pass) {
+
+        if (Hash::needsRehash($pass)) {
+            $this->attributes['password'] = Hash::make($pass);
+        } else {
+            $this->attributes['password'] = $pass;
+        }
     }
 }
