@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\DeviceAssignedEvent;
 use App\Models\Device;
 use App\Models\DeviceRequest;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +34,7 @@ class DeviceRequestCrudController extends CrudController
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
     public function setup()
@@ -120,7 +121,7 @@ class DeviceRequestCrudController extends CrudController
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
@@ -189,6 +190,9 @@ class DeviceRequestCrudController extends CrudController
             $deviceRequest->update($inputs);
             $deviceRequest->device->update($status);
             DeviceLog::create($log_detail);
+            if($status === 'INUSE'){
+                event(new DeviceAssignedEvent($deviceRequest->device,$deviceRequest->user));
+            }
             return $this->redirectLocation($deviceRequest);
         });
     }
