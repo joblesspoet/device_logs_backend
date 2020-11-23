@@ -12,7 +12,8 @@ use App\Http\Requests\Admin\DeviceRequest\StoreRequest;
 use App\Http\Requests\Admin\DeviceRequest\UpdateRequest;
 use App\Models\DeviceLog;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
-
+use Event;
+use Log;
 /**
  * Class DeviceRequestCrudController
  * @package App\Http\Controllers\Admin
@@ -190,9 +191,9 @@ class DeviceRequestCrudController extends CrudController
             $deviceRequest->update($inputs);
             $deviceRequest->device->update($status);
             DeviceLog::create($log_detail);
-            if($status === 'INUSE'){
+            // if($status === 'INUSE'){
                 event(new DeviceAssignedEvent($deviceRequest->device,$deviceRequest->user));
-            }
+            // }
             return $this->redirectLocation($deviceRequest);
         });
     }

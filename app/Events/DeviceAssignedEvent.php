@@ -11,8 +11,9 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Device;
 use App\Models\User;
+use Log;
 
-class DeviceAssignedEvent
+class DeviceAssignedEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -41,6 +42,16 @@ class DeviceAssignedEvent
     public function broadcastOn()
     {
         return new PrivateChannel('User.'.$this->user->id);
+    }
+
+    /**
+     * The event's broadcast name.
+     *
+     * @return string
+     */
+    public function broadcastAs()
+    {
+        return 'DeviceAssignedEvent';
     }
 
     /**
