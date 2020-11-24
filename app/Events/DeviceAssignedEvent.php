@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Http\Resources\DevicesResource;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -11,16 +12,16 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Device;
 use App\Models\User;
-use Log;
+use Illuminate\Support\Facades\Log as FacadesLog;
 
 class DeviceAssignedEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /** @var \App\Models\Device */
-    protected $device;
+    private $device;
     /** @var \App\User */
-    protected $user;
+    private $user;
 
     /**
      * Create a new event instance.
@@ -41,17 +42,7 @@ class DeviceAssignedEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('User.'.$this->user->id);
-    }
-
-    /**
-     * The event's broadcast name.
-     *
-     * @return string
-     */
-    public function broadcastAs()
-    {
-        return 'DeviceAssignedEvent';
+        return ['DevicesAvailabilty'];
     }
 
     /**
@@ -62,8 +53,7 @@ class DeviceAssignedEvent implements ShouldBroadcast
     public function broadcastWith()
     {
         return [
-            'device' => $this->device,
-            'user'  => $this->user,
+            'device' => DevicesResource::make($this->device),
         ];
     }
 }

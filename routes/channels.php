@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +15,8 @@ use Illuminate\Support\Facades\Broadcast;
 */
 
 Broadcast::channel('User.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+});
+Broadcast::channel('DevicesAvailabilty', function($user,$id){
     return (int) $user->id === (int) $id;
 });

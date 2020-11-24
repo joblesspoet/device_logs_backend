@@ -191,9 +191,7 @@ class DeviceRequestCrudController extends CrudController
             $deviceRequest->update($inputs);
             $deviceRequest->device->update($status);
             DeviceLog::create($log_detail);
-            // if($status === 'INUSE'){
-                event(new DeviceAssignedEvent($deviceRequest->device,$deviceRequest->user));
-            // }
+            event(new DeviceAssignedEvent($deviceRequest->device,$deviceRequest->user));
             return $this->redirectLocation($deviceRequest);
         });
     }
