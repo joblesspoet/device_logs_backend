@@ -19,6 +19,17 @@ class DeviceRequest extends Model
         'user_id',
         'device_id',
         'request_detail',
+        'request_status'
+    ];
+
+    const STATUS_PENDING        = "PENDING";
+    const STATUS_PLASE_COLLECT  = "PLEASE_COLLECT";
+    const STATUS_APPROVED       = "APPROVED";
+
+    const REQUEST_STATUS = [
+        self::STATUS_PENDING => self::STATUS_PENDING,
+        self::STATUS_PLASE_COLLECT => self::STATUS_PLASE_COLLECT,
+        self::STATUS_APPROVED => self::STATUS_APPROVED,
     ];
 
     /**
@@ -46,8 +57,8 @@ class DeviceRequest extends Model
         return $this->hasMany(DeviceLog::class);
     }
 
-    public function getStatusAttribute()
-    {
-        return $this->device->status;
-    }
+    // public function getStatusAttribute()
+    // {
+    //     return $this->device->status;
+    // }
 }

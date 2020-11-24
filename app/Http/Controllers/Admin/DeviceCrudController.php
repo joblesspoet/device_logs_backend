@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\DeviceAssignedEvent;
 use App\Models\Device;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Admin\Device\StoreRequest;
@@ -31,7 +32,7 @@ class DeviceCrudController extends CrudController
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
     public function setup()
@@ -141,7 +142,7 @@ class DeviceCrudController extends CrudController
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
@@ -158,7 +159,7 @@ class DeviceCrudController extends CrudController
         /**
          * Columns can be defined using the fluent syntax or array syntax:
          * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
+         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']);
          */
     }
 
@@ -183,7 +184,10 @@ class DeviceCrudController extends CrudController
 
         return DB::transaction(function () use ($device, $inputs) {
             $device->update($inputs);
-            // dd($device);
+            $status = $device->status;
+            if($status === 'AVAILABLE'){
+                event(new DeviceAssignedEvent($device));
+            }
             return $this->redirectLocation($device);
         });
     }

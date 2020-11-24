@@ -68,10 +68,19 @@ class DeviceRequestCrudController extends CrudController
                 }
 
             ],
+
             [
                 'name' => 'request_detail',
                 'label' => 'Request Detail',
                 'type' => 'text',
+            ],
+            [
+                'name' => 'request_status',
+                'label' => 'Request Status',
+                'type' => 'text',
+                'function' => function ($model) {
+                    return str_replace("_"," ",$model);
+                }
             ],
             [
                 'name' => 'created_at',
@@ -108,10 +117,10 @@ class DeviceRequestCrudController extends CrudController
                 'type' => 'text',
             ],
             [
-                'name' => 'status',
-                'label' => "Status",
+                'name' => 'request_status',
+                'label' => "Request Status",
                 'type' => 'select_from_array',
-                'options' => array_combine(Device::STATUS, Device::STATUS),
+                'options' => DeviceRequest::REQUEST_STATUS,
                 'allows_null' => false,
             ]
         ]);
@@ -179,19 +188,23 @@ class DeviceRequestCrudController extends CrudController
             'user_id',
             'device_id',
             'request_detail',
+            'request_status'
         ]);
+
         $log_detail = $request->only([
             'log_detail',
             'device_id',
             'user_id'
         ]);
-        $status =  $request->only('status');
+        $status =  $request->input('request_status');
 
         return DB::transaction(function () use ($deviceRequest, $inputs, $status, $log_detail) {
             $deviceRequest->update($inputs);
-            $deviceRequest->device->update($status);
-            DeviceLog::create($log_detail);
-            event(new DeviceAssignedEvent($deviceRequest->device,$deviceRequest->user));
+            if($status === 'APPROVED'){
+                $deviceRequest->device->update(['status' => Device::INUSE]);
+                DeviceLog::create($log_detail);
+                event(new DeviceAssignedEvent($deviceRequest->device));
+            }
             return $this->redirectLocation($deviceRequest);
         });
     }

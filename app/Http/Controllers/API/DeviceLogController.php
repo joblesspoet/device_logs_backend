@@ -18,7 +18,7 @@ class DeviceLogController extends Controller
     {
         $query = DeviceLog::query();
         return DeviceLogsResource::collection(
-            $query->orderBy('id', 'desc')->paginate(100)
+            $query->orderBy('id', 'desc')->paginate(10)
         );
     }
 

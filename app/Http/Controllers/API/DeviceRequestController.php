@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Devices\DeviceRequest;
 use App\Http\Resources\API\DeviceRequestResource;
+use App\Models\DeviceRequest as ModelsDeviceRequest;
 use App\Traits\GetAuthUserTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +25,7 @@ class DeviceRequestController extends Controller
         $user =  $this->getAuthUser();
         $my_requests = $user->device_requests();
         return DeviceRequestResource::collection(
-            $my_requests->orderBy('id', 'desc')->paginate(100)
+            $my_requests->orderBy('id', 'desc')->paginate(5)
         );
     }
 
@@ -41,9 +42,9 @@ class DeviceRequestController extends Controller
         $inputs = $request->only(['device_id', 'request_detail']);
         $inputs['user_id'] = $user->id;
 
-        DB::transaction(function () use ($inputs) {
-            ModelsDeviceRequest::create($inputs);
-            return JsonResponse::HTTP_OK;
+        return DB::transaction(function () use ($inputs) {
+            $d_request = ModelsDeviceRequest::create($inputs);
+            return DeviceRequestResource::make($d_request);
         });
     }
 

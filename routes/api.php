@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\DeviceRequestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,7 +30,7 @@ Route::namespace('API')
     ->group(function () {
         Route::get('devices', 'DeviceController@index');
         Route::get('devices-logs', 'DeviceLogController@index');
-        Route::get('devices-request', 'DeviceRequestController@index');
-        Route::post('devices-request', 'DeviceRequestController@store');
+        Route::get('devices/request', [DeviceRequestController::class,'index']);
+        Route::post('devices/request', [DeviceRequestController::class, 'store']);
         Route::post('logout', 'Auth\AuthController@logout');
     });

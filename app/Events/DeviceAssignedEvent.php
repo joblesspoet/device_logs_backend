@@ -11,7 +11,6 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Device;
-use App\Models\User;
 use Illuminate\Support\Facades\Log as FacadesLog;
 
 class DeviceAssignedEvent implements ShouldBroadcast
@@ -20,19 +19,16 @@ class DeviceAssignedEvent implements ShouldBroadcast
 
     /** @var \App\Models\Device */
     private $device;
-    /** @var \App\User */
-    private $user;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Device $device, User $user)
+    public function __construct(Device $device)
     {
         //
         $this->device = $device;
-        $this->user   =  $user;
     }
 
     /**

@@ -13,7 +13,7 @@ class CreateDeviceRequestsTable extends Migration
      */
     public function up()
     {
-        
+
         Schema::create('device_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')
@@ -27,7 +27,7 @@ class CreateDeviceRequestsTable extends Migration
             $table->mediumText('request_detail')->nullable();
             $table->timestamps();
 
-            
+
 
         });
     }

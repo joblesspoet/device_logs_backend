@@ -24,7 +24,7 @@ class DeviceRequest extends FormRequest
     public function rules()
     {
         return [
-            'device_id' => 'required',
+            'device_id' => 'required|exists:App\Models\Device,id',
             'request_detail' => 'required',
         ];
     }
