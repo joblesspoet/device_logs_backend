@@ -10,6 +10,7 @@ use App\Models\DeviceRequest as ModelsDeviceRequest;
 use App\Traits\GetAuthUserTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DeviceRequestController extends Controller
 {
@@ -40,12 +41,23 @@ class DeviceRequestController extends Controller
     {
         $user =  $this->getAuthUser();
         $inputs = $request->only(['device_id', 'request_detail']);
-        $inputs['user_id'] = $user->id;
+        $inputs['request_status'] = ModelsDeviceRequest::STATUS_PENDING;
 
-        return DB::transaction(function () use ($inputs) {
-            $d_request = ModelsDeviceRequest::create($inputs);
-            return DeviceRequestResource::make($d_request);
+        $count = $user->device_requests()->where(function($query) use($request){
+            return $query->where('device_id', $request->input('device_id'))->where('request_status', ModelsDeviceRequest::STATUS_PENDING);
+        })->count();
+
+        if($count > 0) {
+            return new JsonResponse([
+                'message' => __('You had already requested the device. Please wait for approval')
+                    ], JsonResponse::HTTP_FOUND);
+        }
+
+        $device_request = DB::transaction(function () use ($inputs, $user) {
+            return $user->device_requests()->create($inputs);
         });
+
+        return DeviceRequestResource::make($device_request);
     }
 
 }
