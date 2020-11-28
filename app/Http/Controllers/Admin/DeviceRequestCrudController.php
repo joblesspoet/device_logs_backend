@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\CollectDeviceEvent;
 use App\Events\DeviceAssignedEvent;
 use App\Models\Device;
 use App\Models\DeviceRequest;
@@ -13,7 +14,10 @@ use App\Http\Requests\Admin\DeviceRequest\UpdateRequest;
 use App\Models\DeviceLog;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Event;
+use Illuminate\Http\Request;
 use Log;
+use Prologue\Alerts\Facades\Alert;
+
 /**
  * Class DeviceRequestCrudController
  * @package App\Http\Controllers\Admin
@@ -125,6 +129,10 @@ class DeviceRequestCrudController extends CrudController
             ]
         ]);
 
+        $this->crud->addButtonFromModelFunction('line', 'deliver_device', 'deliverDevice', 'beginning');
+        $this->crud->addButtonFromModelFunction('line', 'please_collect', 'pleaseCollect', 'beginning');
+        $this->crud->addButtonFromModelFunction('line', 'receive_device', 'receiveDevice', 'beginning');
+
         $this->crud->setRequiredFields(StoreRequest::class, 'create');
         $this->crud->setRequiredFields(UpdateRequest::class, 'update');
     }
@@ -207,5 +215,51 @@ class DeviceRequestCrudController extends CrudController
             }
             return $this->redirectLocation($deviceRequest);
         });
+    }
+
+
+    /**
+     * Please collect action
+     */
+    public function pleaseCollect(DeviceRequest $deviceRequest){
+        $deviceRequest->update(['request_status' => DeviceRequest::STATUS_PLASE_COLLECT]);
+        event(new CollectDeviceEvent($deviceRequest));
+        Alert::success(trans("Request Status has been changed."))->flash();
+        return redirect('/admin/devicerequest');
+    }
+
+    /**
+     * Deliver Device action
+     */
+    public function deliverDevice(DeviceRequest $deviceRequest) {
+
+        $deviceRequest->update(['request_status' => DeviceRequest::STATUS_APPROVED]);
+        $deviceRequest->device->update(['status' => Device::INUSE]);
+        $log_detail = [
+            'log_detail' => "Device has been delivered to {$deviceRequest->user->name}",
+            'device_id' => $deviceRequest->device_id,
+            'user_id' => $deviceRequest->user_id
+        ];
+        DeviceLog::create($log_detail);
+        event(new DeviceAssignedEvent($deviceRequest->device));
+        Alert::success(trans("Device has been assigned."))->flash();
+        return redirect('/admin/devicerequest');
+    }
+
+    /**
+     * Receive device
+     */
+    public function receiveDevice(DeviceRequest $deviceRequest) {
+
+        $deviceRequest->device->update(['status' => Device::AVAILABLE]);
+        $log_detail = [
+            'log_detail' => "Device received from {$deviceRequest->user->name}",
+            'device_id' => $deviceRequest->device_id,
+            'user_id' => $deviceRequest->user_id
+        ];
+        DeviceLog::create($log_detail);
+        event(new DeviceAssignedEvent($deviceRequest->device));
+        Alert::success(trans("Device has been received."))->flash();
+        return redirect('/admin/devicerequest');
     }
 }

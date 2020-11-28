@@ -61,4 +61,25 @@ class DeviceRequest extends Model
     // {
     //     return $this->device->status;
     // }
+
+    public function pleaseCollect($crud = TRUE)
+    {
+        if($this->request_status  === 'PENDING' && $this->device->status === 'AVAILABLE'){
+            return '<a class="btn btn-sm btn-link" href="'.url("admin/devicerequest/collect/".$this->id).'" data-toggle="tooltip" title="Just a demo custom button."><i class="fa fa-search"></i> Please Collect</a>';
+        }
+    }
+
+    public function deliverDevice($crud = TRUE)
+    {
+        if(($this->device->status === 'AVAILABLE' && $this->request_status  === 'PLEASE_COLLECT' )){
+            return '<a class="btn btn-sm btn-link" href="'.url("admin/devicerequest/deliver/".$this->id).'" data-toggle="tooltip" title="Just a demo custom button."><i class="fa fa-search"></i> Deliver Device</a>';
+        }
+    }
+
+    public function receiveDevice($crud = TRUE)
+    {
+        if(($this->device->status === 'INUSE' && $this->request_status  === 'APPROVED' )){
+            return '<a class="btn btn-sm btn-link" href="'.url("admin/devicerequest/receive/".$this->id).'" data-toggle="tooltip" title="Just a demo custom button."><i class="fa fa-search"></i> Receive Device</a>';
+        }
+    }
 }

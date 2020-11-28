@@ -185,9 +185,7 @@ class DeviceCrudController extends CrudController
         return DB::transaction(function () use ($device, $inputs) {
             $device->update($inputs);
             $status = $device->status;
-            if($status === 'AVAILABLE'){
-                event(new DeviceAssignedEvent($device));
-            }
+            event(new DeviceAssignedEvent($device));
             return $this->redirectLocation($device);
         });
     }
