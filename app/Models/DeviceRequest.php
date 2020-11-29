@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class DeviceRequest extends Model
 {
@@ -64,22 +65,23 @@ class DeviceRequest extends Model
 
     public function pleaseCollect($crud = TRUE)
     {
-        if($this->request_status  === 'PENDING' && $this->device->status === 'AVAILABLE'){
+        if($this->request_status === 'PENDING'){
             return '<a class="btn btn-sm btn-link" href="'.url("admin/devicerequest/collect/".$this->id).'" data-toggle="tooltip" title="Just a demo custom button."><i class="fa fa-search"></i> Please Collect</a>';
         }
     }
 
     public function deliverDevice($crud = TRUE)
     {
-        if(($this->device->status === 'AVAILABLE' && $this->request_status  === 'PLEASE_COLLECT' )){
+        if($this->request_status === 'PLEASE_COLLECT'){
             return '<a class="btn btn-sm btn-link" href="'.url("admin/devicerequest/deliver/".$this->id).'" data-toggle="tooltip" title="Just a demo custom button."><i class="fa fa-search"></i> Deliver Device</a>';
         }
     }
 
     public function receiveDevice($crud = TRUE)
     {
-        if(($this->device->status === 'INUSE' && $this->request_status  === 'APPROVED' )){
+        if(($this->request_status === 'APPROVED')){
             return '<a class="btn btn-sm btn-link" href="'.url("admin/devicerequest/receive/".$this->id).'" data-toggle="tooltip" title="Just a demo custom button."><i class="fa fa-search"></i> Receive Device</a>';
         }
+        return false;
     }
 }

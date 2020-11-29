@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Log;
 
@@ -14,7 +15,8 @@ use Illuminate\Support\Facades\Log;
 |
 */
 
-Broadcast::channel('User.{id}', function ($user, $id) {
+Broadcast::channel('user.{id}', function ($user, $id) {
+    // Auth::check();
     return (int) $user->id === (int) $id;
 });
 Broadcast::channel('DevicesAvailabilty', function($user,$id){

@@ -15,7 +15,7 @@ class AddRequestStatusFieldInDeviceRequests extends Migration
     {
         Schema::table('device_requests', function (Blueprint $table) {
             //
-            $table->enum('request_status',['PENDING','PLEASE_COLLECT','APPROVED'])->default('PENDING');
+            $table->enum('request_status',['PENDING','PLEASE_COLLECT','APPROVED','DEVICE_RECEIVED'])->default('PENDING');
         });
     }
 
