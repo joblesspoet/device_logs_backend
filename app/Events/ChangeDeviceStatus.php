@@ -2,8 +2,8 @@
 
 namespace App\Events;
 
-use App\Http\Requests\DeviceRequest as RequestsDeviceRequest;
 use App\Http\Resources\DevicesResource;
+use App\Models\Device;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -11,26 +11,23 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-// use App\Models\Device;
-use App\Models\DeviceRequest;
-use Illuminate\Support\Facades\Log as FacadesLog;
 
-class DeviceAssignedEvent implements ShouldBroadcast
+class ChangeDeviceStatus implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /** @var \App\Models\DeviceRequest */
-    private $device_request;
+    //** @var \App\Models\Device */
+    private $device;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(DeviceRequest $device_request)
+    public function __construct(Device $device)
     {
         //
-        $this->device_request = $device_request;
+        $this->device = $device;
     }
 
     /**
@@ -40,7 +37,7 @@ class DeviceAssignedEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return ['DevicesAssignment'];
+        return ['DevicesAvailabilty'];
     }
 
     /**
@@ -51,8 +48,7 @@ class DeviceAssignedEvent implements ShouldBroadcast
     public function broadcastWith()
     {
         return [
-            'request' => ['id'=> $this->device_request->id, 'request_status' => $this->device_request->request_status],
-            'device'  => ['id' => $this->device_request->device->id, 'status' => $this->device_request->device->status]
+            'device' => DevicesResource::make($this->device),
         ];
     }
 }

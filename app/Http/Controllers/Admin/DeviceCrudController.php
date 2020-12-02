@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Events\DeviceAssignedEvent;
+use App\Events\ChangeDeviceStatus;
 use App\Models\Device;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Admin\Device\StoreRequest;
@@ -185,7 +185,7 @@ class DeviceCrudController extends CrudController
         return DB::transaction(function () use ($device, $inputs) {
             $device->update($inputs);
             $status = $device->status;
-            event(new DeviceAssignedEvent($device));
+            event(new ChangeDeviceStatus($device));
             return $this->redirectLocation($device);
         });
     }

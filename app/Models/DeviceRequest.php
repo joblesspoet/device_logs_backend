@@ -26,11 +26,13 @@ class DeviceRequest extends Model
     const STATUS_PENDING        = "PENDING";
     const STATUS_PLASE_COLLECT  = "PLEASE_COLLECT";
     const STATUS_APPROVED       = "APPROVED";
+    const DEVICE_RECEIVED       = "DEVICE_RECEIVED";
 
     const REQUEST_STATUS = [
         self::STATUS_PENDING => self::STATUS_PENDING,
         self::STATUS_PLASE_COLLECT => self::STATUS_PLASE_COLLECT,
         self::STATUS_APPROVED => self::STATUS_APPROVED,
+        self::DEVICE_RECEIVED => self::DEVICE_RECEIVED
     ];
 
     /**
