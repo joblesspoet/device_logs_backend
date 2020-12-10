@@ -4,6 +4,7 @@ namespace App\Events;
 
 use App\Http\Requests\DeviceRequest as RequestsDeviceRequest;
 use App\Http\Resources\DevicesResource;
+use App\Models\DeviceLog;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -21,16 +22,18 @@ class DeviceAssignedEvent implements ShouldBroadcast
 
     /** @var \App\Models\DeviceRequest */
     private $device_request;
+    private $log;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(DeviceRequest $device_request)
+    public function __construct(DeviceRequest $device_request, DeviceLog $log)
     {
         //
         $this->device_request = $device_request;
+        $this->log            = $log;
     }
 
     /**
@@ -52,7 +55,8 @@ class DeviceAssignedEvent implements ShouldBroadcast
     {
         return [
             'request' => ['id'=> $this->device_request->id, 'request_status' => $this->device_request->request_status],
-            'device'  => ['id' => $this->device_request->device->id, 'status' => $this->device_request->device->status]
+            'device'  => ['id' => $this->device_request->device->id, 'status' => $this->device_request->device->status],
+            'log'     => $this->log
         ];
     }
 }

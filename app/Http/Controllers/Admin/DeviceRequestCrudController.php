@@ -240,9 +240,10 @@ class DeviceRequestCrudController extends CrudController
             'device_id' => $deviceRequest->device_id,
             'user_id' => $deviceRequest->user_id
         ];
-        DeviceLog::create($log_detail);
-        // dd($deviceRequest);
-        event(new DeviceAssignedEvent($deviceRequest));
+
+        $log = DeviceLog::create($log_detail);
+
+        event(new DeviceAssignedEvent($deviceRequest, $log));
         Alert::success(trans("Device has been assigned."))->flash();
         return redirect('/admin/devicerequest');
     }
@@ -259,8 +260,8 @@ class DeviceRequestCrudController extends CrudController
             'device_id' => $deviceRequest->device_id,
             'user_id' => $deviceRequest->user_id
         ];
-        DeviceLog::create($log_detail);
-        event(new DeviceAssignedEvent($deviceRequest));
+        $log = DeviceLog::create($log_detail);
+        event(new DeviceAssignedEvent($deviceRequest, $log));
         Alert::success(trans("Device has been received."))->flash();
         return redirect('/admin/devicerequest');
     }
